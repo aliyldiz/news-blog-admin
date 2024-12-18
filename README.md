@@ -19,7 +19,7 @@ This project is a news/blog platform developed using ASP.NET Core MVC. It allows
 - Entity Framework Core - ORM for database operations.
  
 - SQL Server - Database management system.
-
+ 
 - HTML/CSS/JavaScript - For user interface design.
 
 ## Features
