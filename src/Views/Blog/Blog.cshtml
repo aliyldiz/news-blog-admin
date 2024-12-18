@@ -1,0 +1,53 @@
+<form method="post" id="form">
+    <h1>Add Blog</h1>
+    <hr />
+    <div class="form-group">
+        <input type="text" class="form-control" id="title" placeholder="Title">
+    </div>
+    <div class="form-group">
+        <input type="text" class="form-control" id="subtitle" placeholder="Subtitle">
+    </div>
+    <div id="summernote"></div>
+    <div class="form-group">
+        <input type="file" class="form-control" name="imagePath">
+    </div>
+    @Html.DropDownList("Categories", null, "Select Category", new { @class = "form-control" })
+    <br/>
+    <div class="btn-group-toggle">
+        <button type="button" onclick="Publish()" class="btn btn-primary">Publish</button>
+    </div>
+</form>
+
+@section Scripts
+{
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#summernote').summernote();
+        });
+        function Publish() 
+        {
+            var title = document.getElementById('title');
+            var subtitle = document.getElementById('subtitle');
+            var content = $('#summernote').summernote('code');
+            var category = document.getElementById('Categories');
+            var form = document.getElementById('form');
+            
+            var formData = new FormData(form);
+            formData.append('title', title.value);
+            formData.append('subtitle', subtitle.value);
+            formData.append('content', content);
+            formData.append('categoryid', category.value);
+            formData.append('IsPublish', true);
+            
+            var url = '/Blog/Save';
+            
+            fetch(url, {
+                method: 'POST',
+                body: formData
+            }).then(res => res.json()).then(result => {
+                alert("Blog saved successfully");
+            }); 
+        }
+    </script>
+}

@@ -1,0 +1,75 @@
+@model IEnumerable<NewsBlogAdmin.Models.Category>
+
+@{
+    ViewData["Title"] = "Category";
+}
+
+<button type="button" onclick="$('#CategoryModal').modal('show')" class="btn btn-primary">Add Category</button>
+
+<table class="table table-hover">
+    <thead>
+    <th scope="col">Id</th>
+    <th scope="col">Name</th>
+    <th scope="col"></th>
+    </thead>
+    <tbody>
+        @foreach(var item in Model)
+        {
+            <tr>
+                <th scope="row">@item.Id</th>
+                <td>@item.Name</td>
+                <td>
+                    <a class="btn btn-danger" asp-controller="Category" asp-route-id="@item.Id" asp-action="DeleteCategory">Delete</a>
+                    <button class="btn btn-secondary" onclick="updateForm(@item.Id)" type="button">Update</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div class="modal" id="CategoryModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Category: </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="post" action="/Category/AddCategory" autocomplete="off">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <input type="hidden" id="id" name="Id" class="form-control">
+                        <input type="text" id="name" name="Name" class="form-control" placeholder="Name">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="clearForm()" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" id="saveBtn" class="btn btn-primary">Add</button>
+                    <button type="submit" id="updateBtn" class="btn btn-primary">Update</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(() => clearForm())
+        function updateForm(id) {
+            fetch('/Category/CategoryDetails?Id=' + id)
+                .then(res => res.json())
+                .then(res => {
+                    $('#id').val(res.id);
+                    $('#name').val(res.name);
+                });
+        $('#saveBtn').hide();
+        $('#updateBtn').show();
+        $('#CategoryModal').modal('show');
+        }
+        function clearForm() {
+            $('#id').val(null);
+            $('#name').val(null);
+            $('#saveBtn').show();
+            $('#updateBtn').hide();
+        }
+    </script>
+}
